@@ -11,6 +11,7 @@ abstract class MathEvalStackItemBase
     abstract double getDouble();
     abstract int executeInt();
     abstract int executeInt(int val);
+    abstract int executeInt(int intLeft, int intRight);
     abstract double executeDouble();
     abstract double executeDouble(double val);
 
@@ -63,6 +64,11 @@ class MathEvalStackItemVar extends MathEvalStackItemBase
         return val;
     }
 
+    @Override
+    int executeInt(int intLeft, int intRight) {
+        throw new Error("Invalid expression executeInt intLeft" + intLeft + " intRight=" + intRight);
+    }
+
     String varName;
 }
 
@@ -98,12 +104,17 @@ class MathEvalStackItemOperator extends MathEvalStackItemBase
 
     @Override
     int executeInt(int val) {
-        throw new Error("Not yet implemented!");
+        return operator.execute(val);
     }
 
     @Override
     double executeDouble(double val) {
         throw new Error("Not yet implemented!");
+    }
+
+    @Override
+    int executeInt(int intLeft, int intRight) {
+        return operator.execute(intLeft, intRight);
     }
 }
 
@@ -113,6 +124,11 @@ class MathEvalStackNumber extends MathEvalStackItemBase
        super(_parent);
        number = _number;
    }
+
+    MathEvalStackNumber(MathExpressionExecuterBase _parent, int val) {
+        super(_parent);
+        number = "" + val;
+    }
 
    @Override
    boolean isNumber() {
@@ -135,8 +151,6 @@ class MathEvalStackNumber extends MathEvalStackItemBase
        throw new Error("Not yet implemented!");
    }
 
-   String number;
-
     @Override
     int executeInt(int val) {
         throw new Error("Not yet implemented!");
@@ -146,6 +160,13 @@ class MathEvalStackNumber extends MathEvalStackItemBase
     double executeDouble(double val) {
         throw new Error("Not yet implemented!");
     }
+
+    @Override
+    int executeInt(int intLeft, int intRight) {
+        throw new Error("Invalid expression executeInt intLeft" + intLeft + " intRight=" + intRight);
+    }
+
+    String number;
 }
 
 class MathEvalStackVariable extends MathEvalStackItemBase
@@ -176,8 +197,6 @@ class MathEvalStackVariable extends MathEvalStackItemBase
        throw new Error("Not yet implemented!");
    }
 
-   String variableName;
-
     @Override
     int executeInt(int val) {
         throw new Error("Not yet implemented!");
@@ -187,6 +206,13 @@ class MathEvalStackVariable extends MathEvalStackItemBase
     double executeDouble(double val) {
         throw new Error("Not yet implemented!");
     }
+
+    @Override
+    int executeInt(int intLeft, int intRight) {
+        throw new Error("Invalid expression executeInt intLeft" + intLeft + " intRight=" + intRight);
+    }
+
+    String variableName;
 }
 
 public class MathExpressionParser

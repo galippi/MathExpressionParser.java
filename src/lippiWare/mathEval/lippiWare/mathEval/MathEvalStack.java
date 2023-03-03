@@ -31,8 +31,14 @@ class MathEvalStack {
             if (item.isNumber())
             {
                 if (lastItem0 == null)
+                {
+                    if (lastOperator != null)
+                    {
+                        item = new MathEvalStackNumber(null, lastOperator.executeInt(item.getInt()));
+                        lastOperator = null;
+                    }
                     lastItem0 = item;
-                else
+                }else
                 if (lastItem1 == null)
                     lastItem1 = item;
                 else
@@ -58,7 +64,7 @@ class MathEvalStack {
             result = lastItem0.getInt();
         }else
         {
-            throw new Error("Not yet implemented!");
+            result = lastOperator.executeInt(lastItem0.getInt(), lastItem1.getInt());
         }
         MathEvalStackItemBase resultItem = items.get(0);
         resultItem.executeInt(result);
