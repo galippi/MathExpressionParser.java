@@ -2,10 +2,6 @@ package lippiWare.mathEval;
 
 import java.util.TreeMap;
 
-class MathEvalStack {
-    
-}
-
 abstract class MathOperatorBase {
     abstract char getOperator();
     abstract int getOperatorPrecedenceVal();
@@ -57,33 +53,34 @@ class MathOperatorMul extends MathOperatorBase {
     }
 }
 
-class MathOperatorPrecedenceDatabase {
-    TreeMap<Integer, Integer> operators = new TreeMap<>();
-    MathOperatorPrecedenceDatabase() {
-        add(')',  0);
-        add('+',  5);
-        add('-',  5);
-        add('|',  5);
-        add('&',  5);
-        add('!',  5);
-        add('*', 10);
-        add('/', 10);
-        add('%', 10);
-        add('^', 20);
-        add('(', 90);
+class MathOperatorPrecedenceDatabaseStorage {
+    static TreeMap<Integer, MathOperatorBase> operators = new TreeMap<>();
+
+    MathOperatorPrecedenceDatabaseStorage() {
+        //add(')',  0);
+        add(new MathOperatorPlus());
+        //add('-',  5);
+        //add('|',  5);
+        //add('&',  5);
+        //add('!',  5);
+        add(new MathOperatorMul());
+        //add('/', 10);
+        //add('%', 10);
+        //add('^', 20);
+        //add('(', 90);
     }
 
-    void add(char operator, int val) {
-        operators.put(new Integer(operator), new Integer(val));
+    static void add(MathOperatorBase operator) {
+        operators.put(new Integer(operator.getOperator()), operator);
     }
-    int get(char operator) {
+    static public MathOperatorBase get(char operator) {
         return operators.get(new Integer(operator));
     }
 }
 
-public class MathOperatorPrecedence {
-    static MathOperatorPrecedenceDatabase database = new MathOperatorPrecedenceDatabase();
-    static public int get(char operator) {
-        return database.get(operator);
+public class MathOperatorPrecedenceDatabase {
+    static MathOperatorPrecedenceDatabaseStorage database = new MathOperatorPrecedenceDatabaseStorage();
+    static public MathOperatorBase get(char operator) {
+        return MathOperatorPrecedenceDatabaseStorage.get(operator);
     }
 }
