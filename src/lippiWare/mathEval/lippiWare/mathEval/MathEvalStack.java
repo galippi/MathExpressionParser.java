@@ -27,78 +27,16 @@ class MathEvalStack {
     public int executeInt() {
         if (items.size() < 2)
             throw new Error("Math expression evaluation error - too short! size=" + items.size());
+
         //MathEvalStackItemBase result = items.get(0);
-        int idx = 1;
-        MathEvalStackItemBase lastOperator = null;
-        MathEvalStackItemBase lastItem0 = null;
-        MathEvalStackItemBase lastItem1 = null;
-        while(idx < items.size())
-        {
-            MathEvalStackItemBase item = items.get(idx++);
-            if (item.isNumber())
-            {
-                if (lastItem0 == null)
-                {
-                    if (lastOperator != null)
-                    {
-                        item = new MathEvalStackNumber(null, lastOperator.executeInt(item.getInt()));
-                        lastOperator = null;
-                    }
-                    lastItem0 = item;
-                }else
-                if (lastItem1 == null)
-                    lastItem1 = item;
-                else
-                    throw new Error("Invalid expression e=" + parent.getExpression());
-            }else
-            { // operator evaluation
-                if (lastOperator == null)
-                {
-                    if (lastItem1 != null)
-                        throw new Error("Invalid expression e=" + parent.getExpression());
-                    lastOperator = item;
-                }else
-                {
-                    if (lastItem1 != null)
-                    {
-                        do {
-                            MathEvalStackItemOperator lastOperatorMesio = (MathEvalStackItemOperator)lastOperator;
-                            MathEvalStackItemOperator itemMesio = (MathEvalStackItemOperator)item;
-                            if (lastOperatorMesio.operator.getOperatorPrecedenceVal() >= itemMesio.operator.getOperatorPrecedenceVal())
-                            {
-                                int result = lastOperator.executeInt(lastItem0.getInt(), lastItem1.getInt());
-                                lastItem0 = new MathEvalStackNumber(null, result);
-                                lastItem1 = null;
-                                lastOperator = item;
-                                item = null;
-                            }else
-                            {
-                                //throw new Error("Invalid expression e=" + parent.getExpression());
-                                ParsingResultInt pri = parsing(idx, lastItem1, item);
-                                idx = pri.idx;
-                                int result = pri.result;
-                                lastItem1 = new MathEvalStackNumber(null, result);
-                                item = pri.lastOperator;
-                            }
-                        }while (item != null);
-                    }else
-                    {
-                        throw new Error("Not yet implemented!");
-                    }
-                }
-            }
-        }
-        int result;
-        if (lastOperator == null)
-        {
-            result = lastItem0.getInt();
-        }else
-        {
-            result = lastOperator.executeInt(lastItem0.getInt(), lastItem1.getInt());
-        }
+        ParsingResultInt pri = parsing(1, null, null);
+
+        if ((pri.idx < items.size()) || (pri.lastOperator != null))
+            throw new Error("Invalid expression e=" + parent.getExpression());
+
         MathEvalStackItemBase resultItem = items.get(0);
-        resultItem.executeInt(result);
-        return result;
+        resultItem.executeInt(pri.result);
+        return pri.result;
     }
 
     private ParsingResultInt parsing(int idx, MathEvalStackItemBase lastItem0, MathEvalStackItemBase lastOperator) {
@@ -158,7 +96,14 @@ class MathEvalStack {
                 }
             }
         }
-        int result = lastOperator.executeInt(lastItem0.getInt(), lastItem1.getInt());
+        int result;
+        if (lastOperator == null)
+        {
+            result = lastItem0.getInt();
+        }else
+        {
+            result = lastOperator.executeInt(lastItem0.getInt(), lastItem1.getInt());
+        }
         ParsingResultInt pri = new ParsingResultInt();
         pri.idx = idx;
         pri.result = result;
