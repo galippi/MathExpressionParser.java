@@ -225,22 +225,22 @@ public class MathExpressionParser
         int bracketDeep = 0;
         while(idx < expression.length())
         {
-            char c = getNextChar(expression);
-            if (c == 0)
+            NextChar nc = getNextChar(expression);
+            if (nc == null)
             {
                 if (idx >= expression.length())
                     break;
                 throw new Error("Invalid char at idx " + idx + " expression=" + expression);
             }
-            if (c == '(')
+            if (nc.c == '(')
                 bracketDeep++;
-            else if (c == ')')
+            else if (nc.c == ')')
             {
                 if (bracketDeep == 0)
                     throw new Error("Invalid closing bracket at position " + idx);
                 bracketDeep--;
             }
-            if (isOperator(c))
+            if (isOperator(nc.c))
             {
                 if (!lastItem.isEmpty())
                 {
@@ -254,10 +254,12 @@ public class MathExpressionParser
                         throw new Error("Error: unable to process expression '" + expression +"' idx=" + idx);
                     lastItem = "";
                 }
-                stack.put(new MathEvalStackItemOperator(parent, MathOperatorPrecedenceDatabase.get(c)));
+                stack.put(new MathEvalStackItemOperator(parent, MathOperatorPrecedenceDatabase.get(nc.c)));
             }else
             {
-                lastItem = lastItem + c;
+                if ((!lastItem.isEmpty()) && (nc.spaceIsSkipped))
+                    throw new Error("Space separated numbers '" + expression + "'!");
+                lastItem = lastItem + nc.c;
             }
         }
         if (!lastItem.isEmpty())
@@ -292,14 +294,22 @@ public class MathExpressionParser
         throw new Error("Not yet implemented!");
     }
 
-    private char getNextChar(String expression) {
+    class NextChar
+    {
+        char c;
+        boolean spaceIsSkipped;
+    }
+    NextChar nc = new NextChar();
+    private NextChar getNextChar(String expression) {
+        nc.spaceIsSkipped = false;
         while(idx < expression.length())
         {
-            char c = expression.charAt(idx++);
-            if (c != ' ')
-                return c;
+            nc.c = expression.charAt(idx++);
+            if (nc.c != ' ')
+                return nc;
+            nc.spaceIsSkipped = true;
         }
-        return 0;
+        return null;
     }
 
     public int executeInt() {

@@ -27,5 +27,8 @@ public class MathExpressionExecuterTest {
         t("2+3*2+4", 12);
         t("3*2+3*2", 12);
         t("3 * 2 + 3 * 2", 12);
+
+        //t("5 5", 3);
+
     }
 }
