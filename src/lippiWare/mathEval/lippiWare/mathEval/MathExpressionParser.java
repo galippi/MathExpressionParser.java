@@ -222,6 +222,7 @@ public class MathExpressionParser
         expression = _expression;
         stack.put(new MathEvalStackItemVar(parent, result));
         String lastItem = "";
+        int bracketDeep = 0;
         while(idx < expression.length())
         {
             char c = getNextChar(expression);
@@ -230,6 +231,14 @@ public class MathExpressionParser
                 if (idx >= expression.length())
                     break;
                 throw new Error("Invalid char at idx " + idx + " expression=" + expression);
+            }
+            if (c == '(')
+                bracketDeep++;
+            else if (c == ')')
+            {
+                if (bracketDeep == 0)
+                    throw new Error("Invalid closing bracket at position " + idx);
+                bracketDeep--;
             }
             if (isOperator(c))
             {
@@ -262,6 +271,8 @@ public class MathExpressionParser
             }else
                 throw new Error("Error: unable to process expression '" + expression +"' idx=" + idx);
         }
+        if (bracketDeep != 0)
+            throw new Error("Error: missing closing bracket '" + expression +"' idx=" + idx);
     }
 
     private boolean isOperator(char c) {
@@ -269,8 +280,11 @@ public class MathExpressionParser
     }
 
     private boolean isNumber(String lastItem) {
-        //throw new Error("Not yet implemented!");
-        // TODO Auto-generated method stub
+        if (lastItem.isEmpty())
+            throw new Error("Error: invalid call of isNumber!");
+        for (int i = 0; i < lastItem.length(); i++)
+            if (!Character.isDigit(lastItem.charAt(i)))
+                return false;
         return true;
     }
 
