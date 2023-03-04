@@ -61,22 +61,26 @@ class MathEvalStack {
                 {
                     if (lastItem1 != null)
                     {
-                        MathEvalStackItemOperator lastOperatorMesio = (MathEvalStackItemOperator)lastOperator;
-                        MathEvalStackItemOperator itemMesio = (MathEvalStackItemOperator)item;
-                        if (lastOperatorMesio.operator.getOperatorPrecedenceVal() >= itemMesio.operator.getOperatorPrecedenceVal())
-                        {
-                            int result = lastOperator.executeInt(lastItem0.getInt(), lastItem1.getInt());
-                            lastItem0 = new MathEvalStackNumber(null, result);
-                            lastItem1 = null;
-                            lastOperator = item;
-                        }else
-                        {
-                            //throw new Error("Invalid expression e=" + parent.getExpression());
-                            ParsingResultInt pri = parsing(idx, lastItem1, item);
-                            idx = pri.idx;
-                            int result = pri.result;
-                            lastItem1 = new MathEvalStackNumber(null, result);
-                        }
+                        do {
+                            MathEvalStackItemOperator lastOperatorMesio = (MathEvalStackItemOperator)lastOperator;
+                            MathEvalStackItemOperator itemMesio = (MathEvalStackItemOperator)item;
+                            if (lastOperatorMesio.operator.getOperatorPrecedenceVal() >= itemMesio.operator.getOperatorPrecedenceVal())
+                            {
+                                int result = lastOperator.executeInt(lastItem0.getInt(), lastItem1.getInt());
+                                lastItem0 = new MathEvalStackNumber(null, result);
+                                lastItem1 = null;
+                                lastOperator = item;
+                                item = null;
+                            }else
+                            {
+                                //throw new Error("Invalid expression e=" + parent.getExpression());
+                                ParsingResultInt pri = parsing(idx, lastItem1, item);
+                                idx = pri.idx;
+                                int result = pri.result;
+                                lastItem1 = new MathEvalStackNumber(null, result);
+                                item = pri.lastOperator;
+                            }
+                        }while (item != null);
                     }else
                     {
                         throw new Error("Not yet implemented!");

@@ -6,8 +6,9 @@ public class MathExpressionExecuterTest {
     static void t(String expression, int expectedResult) {
         MathExpressionExecuterBase meeb = new MathExpressionExecuterBase();
         MathExpressionParser mep = new MathExpressionParser(meeb, "varResult", expression);
-        System.out.println("mep=" + mep.getExpression() + " result = " + mep.executeInt());
-        if (expectedResult != mep.executeInt())
+        int result = mep.executeInt();
+        System.out.println("mep=" + mep.getExpression() + " result = " + result);
+        if (expectedResult != result)
             throw new Error("Invalid result is calculated!");
     }
 
