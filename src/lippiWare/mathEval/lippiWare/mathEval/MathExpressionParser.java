@@ -100,7 +100,7 @@ class MathEvalStackItemOperator extends MathEvalStackItemBase
         throw new Error("Not yet implemented!");
     }
 
-    MathOperatorBase operator;
+    public MathOperatorBase operator;
 
     @Override
     int executeInt(int val) {
