@@ -24,7 +24,8 @@ class MathEvalStack {
         //return null;
     }
 
-    public int executeInt() {
+    public int executeInt() throws Exception
+    {
         if (items.size() < 2)
             throw new Error("Math expression evaluation error - too short! size=" + items.size());
 
@@ -39,7 +40,9 @@ class MathEvalStack {
         return pri.result;
     }
 
-    private ParsingResultInt parsing(int idx, MathEvalStackItemBase lastItem0, MathEvalStackItemBase lastOperator) {
+    private ParsingResultInt parsing(int idx, MathEvalStackItemBase lastItem0, MathEvalStackItemBase lastOperator)
+            throws Exception
+    {
         MathEvalStackItemBase lastItem1 = null;
         while(idx < items.size())
         {

@@ -7,13 +7,13 @@ abstract class MathEvalStackItemBase
     }
 
     abstract boolean isNumber();
-    abstract int getInt();
-    abstract double getDouble();
-    abstract int executeInt();
-    abstract int executeInt(int val);
-    abstract int executeInt(int intLeft, int intRight);
-    abstract double executeDouble();
-    abstract double executeDouble(double val);
+    abstract int getInt() throws Exception;
+    abstract double getDouble() throws Exception;
+    abstract int executeInt() throws Exception;
+    abstract int executeInt(int val) throws Exception;
+    abstract int executeInt(int intLeft, int intRight) throws Exception;
+    abstract double executeDouble() throws Exception;
+    abstract double executeDouble(double val) throws Exception;
 
     MathExpressionExecuterBase parent;
 }
@@ -218,7 +218,9 @@ class MathEvalStackVariable extends MathEvalStackItemBase
 public class MathExpressionParser
 {
     int idx = 0;
-    public MathExpressionParser(MathExpressionExecuterBase parent, String result, String _expression) {
+    public MathExpressionParser(MathExpressionExecuterBase parent, String result, String _expression)
+        throws Exception
+    {
         expression = _expression;
         stack.put(new MathEvalStackItemVar(parent, result));
         String lastItem = "";
@@ -258,7 +260,7 @@ public class MathExpressionParser
             }else
             {
                 if ((!lastItem.isEmpty()) && (nc.spaceIsSkipped))
-                    throw new Error("Space separated numbers '" + expression + "'!");
+                    throw new Exception("Space separated numbers '" + expression + "'!");
                 lastItem = lastItem + nc.c;
             }
         }
@@ -312,7 +314,8 @@ public class MathExpressionParser
         return null;
     }
 
-    public int executeInt() {
+    public int executeInt() throws Exception
+    {
         return stack.executeInt();
     }
 
