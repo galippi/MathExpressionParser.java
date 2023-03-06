@@ -221,6 +221,24 @@ public class MathExpressionParser
     public MathExpressionParser(MathExpressionExecuterBase parent, String result, String _expression)
         throws Exception
     {
+        process(parent, result, _expression);
+    }
+
+    public MathExpressionParser(MathExpressionExecuterBase parent, String expression) throws Exception {
+        int eqIdx = expression.indexOf('=');
+        if (eqIdx < 1)
+            throw new Exception("MathExpressionParser.ctor invalid expression=" + expression + " (no =)!");
+        String resultVar = expression.substring(0, eqIdx).trim();
+        if (resultVar.isEmpty())
+            throw new Exception("MathExpressionParser.ctor invalid expression=" + expression + " (missing result variable)!");
+        String expressionRest = expression.substring(eqIdx + 1).trim();
+        if (expressionRest.isEmpty())
+            throw new Exception("MathExpressionParser.ctor invalid expression=" + expression + " (missing expression)!");
+        process(parent, resultVar, expressionRest);
+    }
+
+    void process(MathExpressionExecuterBase parent, String result, String _expression) throws Exception
+    {
         expression = _expression;
         stack.put(new MathEvalStackItemVar(parent, result));
         String lastItem = "";
