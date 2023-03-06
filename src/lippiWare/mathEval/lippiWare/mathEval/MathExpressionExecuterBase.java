@@ -16,9 +16,7 @@ public class MathExpressionExecuterBase
 
     public int setIntVar(String varName, int val) {
         // TODO Auto-generated method stub
-        //throw new Error("Not yet implemented!");
-        //System.out.println("setIntVar varName="+varName + " val=" + val);
-        return val;
+        throw new Error("Not yet implemented!");
     }
 
     public double setDoubleVar(String varName, double val) {
