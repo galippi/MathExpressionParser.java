@@ -107,6 +107,70 @@ class MathOperatorMul extends MathOperatorBase {
     }
 }
 
+class MathOperatorDiv extends MathOperatorBase {
+    @Override
+    char getOperator() {
+        return '/';
+    }
+
+    @Override
+    int getOperatorPrecedenceVal() {
+        return 10;
+    }
+
+    @Override
+    int getOperandNum() {
+        return 2;
+    }
+
+    @Override
+    int execute(MathEvalStack stack) {
+        throw new Error("Not yet implemented!"); // TODO
+    }
+
+    @Override
+    int execute(int val) {
+        throw new Error("Not yet implemented!"); // TODO
+    }
+
+    @Override
+    int execute(int valLeft, int valRight) {
+        return valLeft / valRight;
+    }
+}
+
+class MathOperatorRemain extends MathOperatorBase {
+    @Override
+    char getOperator() {
+        return '%';
+    }
+
+    @Override
+    int getOperatorPrecedenceVal() {
+        return 10;
+    }
+
+    @Override
+    int getOperandNum() {
+        return 2;
+    }
+
+    @Override
+    int execute(MathEvalStack stack) {
+        throw new Error("Not yet implemented!"); // TODO
+    }
+
+    @Override
+    int execute(int val) {
+        throw new Error("Not yet implemented!"); // TODO
+    }
+
+    @Override
+    int execute(int valLeft, int valRight) {
+        return valLeft % valRight;
+    }
+}
+
 class MathOperatorPrecedenceDatabaseStorage {
     static TreeMap<Integer, MathOperatorBase> operators = new TreeMap<>();
 
@@ -118,8 +182,8 @@ class MathOperatorPrecedenceDatabaseStorage {
         //add('&',  5);
         //add('!',  5);
         add(new MathOperatorMul());
-        //add('/', 10);
-        //add('%', 10);
+        add(new MathOperatorDiv());
+        add(new MathOperatorRemain());
         //add('^', 20);
         //add('(', 90);
     }
